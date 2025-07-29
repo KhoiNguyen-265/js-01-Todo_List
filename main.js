@@ -1,8 +1,4 @@
-const tasks = [
-    // { title: "Design a website", completed: true },
-    // { title: "Learn JavaScript", completed: false },
-    // { title: "Build a Todo App", completed: true },
-];
+const tasks = JSON.parse(localStorage.getItem("tasks")) ?? [];
 
 const taskList = document.querySelector("#task-list");
 const todoForm = document.querySelector("#todo-form");
@@ -16,6 +12,10 @@ function isDuplicateTask(newTitle, excludeIndex = -1) {
             excludeIndex !== index
     );
     return isDuplicate;
+}
+
+function saveTasks() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
 function normalizeTitle(title) {
@@ -56,6 +56,7 @@ function handleTaskActions(e) {
 
         task.title = newTitle;
         renderTasks();
+        saveTasks();
         return;
     }
 
@@ -63,6 +64,7 @@ function handleTaskActions(e) {
     if (e.target.closest(".done")) {
         task.completed = !task.completed;
         renderTasks();
+        saveTasks();
         return;
     }
 
@@ -71,6 +73,7 @@ function handleTaskActions(e) {
         if (confirm(`Are you sure you want to delete "${task.title}"`)) {
             tasks.splice(taskIndex, 1);
             renderTasks();
+            saveTasks();
         }
     }
 }
@@ -99,6 +102,7 @@ function addTask(e) {
         completed: false,
     });
     renderTasks();
+    saveTasks();
     todoInput.value = "";
 }
 
