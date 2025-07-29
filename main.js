@@ -5,6 +5,12 @@ const todoForm = document.querySelector("#todo-form");
 const todoInput = document.querySelector("#todo-input");
 const main = document.getElementsByTagName("main");
 
+function escapeHTML(html) {
+    const div = document.createElement("div");
+    div.innerText = html;
+    return div.innerHTML;
+}
+
 function isDuplicateTask(newTitle, excludeIndex = -1) {
     const isDuplicate = tasks.some(
         (task, index) =>
@@ -27,7 +33,9 @@ function normalizeTitle(title) {
 
 function handleTaskActions(e) {
     const taskItem = e.target.closest(".task-item");
-    const taskIndex = +taskItem.getAttribute("task-index");
+    if (!taskItem) return;
+    // const taskIndex = +taskItem.getAttribute("data-index");
+    const taskIndex = +taskItem.dataset.index;
     const task = tasks[taskIndex];
 
     // Click Edit
@@ -117,8 +125,8 @@ function renderTasks() {
             (task, index) => `
     <li class="task-item ${
         task.completed ? "completed" : ""
-    }" task-index = "${index}">
-        <span class="task-title">${task.title}</span>
+    }" data-index = "${index}">
+        <span class="task-title">${escapeHTML(task.title)}</span>
         <div class="task-action">
             <button class="task-btn edit">Edit</button>
             <button class="task-btn done">${
